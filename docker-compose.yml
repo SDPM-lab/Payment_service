@@ -16,6 +16,7 @@ services:
             - './app:/app'
         command: >
             bash -c "php spark migrate
+            && php spark db:seed PaymentServiceSeeder
             && ./rr serve"
     payment_DB:
         image: postgres:11.12
