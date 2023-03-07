@@ -15,9 +15,7 @@ services:
         volumes:
             - './app:/app'
         command: >
-            bash -c "php spark migrate
-            && php spark db:seed PaymentServiceSeeder
-            && ./rr serve"
+            bash -c "./rr serve"
     payment_DB:
         image: postgres:11.12
         environment:
