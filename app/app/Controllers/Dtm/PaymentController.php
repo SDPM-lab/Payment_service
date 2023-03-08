@@ -228,7 +228,12 @@ class PaymentController extends BaseController
         if (is_null($compensateAmount)) return $this->fail("請輸入補償金額", 404);
 
         $paymentEntity = PaymentBusinessLogic::getPaymentByOrderKey($orderKey, $this->u_key);
-        if (is_null($paymentEntity)) return $this->fail("無此訂單付款資訊", 404);
+        
+        if (is_null($paymentEntity)) {
+            return $this->respond([
+                "msg" => "OK"
+            ]);
+        }
 
         $paymentModel = new PaymentModel();
 
