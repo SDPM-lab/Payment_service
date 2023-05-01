@@ -10,7 +10,13 @@ class Wallet extends Seeder
     {
         $faker = static::faker();
         for ($i=0; $i < 5; $i++) {
-            $balance = random_int(0, 100000);
+            if ($i == 0) {
+                $balance = 900000000;
+            } else if ($i == 1) {
+                $balance = 0;
+            } else {
+                $balance = random_int(0, 100000);
+            }
 
             $this->db->table("wallet")
                      ->insert([
