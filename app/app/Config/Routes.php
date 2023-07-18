@@ -66,6 +66,22 @@ $routes->group(
 );
 
 $routes->group(
+    'api/v2',
+    [
+        'namespace' => 'App\Controllers\v2',
+        'filter'    => 'user'
+    ],
+    function (\CodeIgniter\Router\RouteCollection $routes) {
+        //Payment
+        $routes->get('payments', 'PaymentController::index');
+        $routes->get('payments/(:num)', 'PaymentController::show/$1');
+        $routes->post('payments', 'PaymentController::create');
+        $routes->put('payments', 'PaymentController::update');
+        $routes->delete('payments/(:num)', 'PaymentController::delete/$1');
+    }
+);
+
+$routes->group(
     'api/vDtm',
     [
         'namespace' => 'App\Controllers\Dtm',
@@ -84,6 +100,23 @@ $routes->group(
         $routes->post('wallet/show', 'WalletController::show');
         $routes->post('wallet/create', 'WalletController::create');
         $routes->post('wallet/compensate', 'WalletController::compensate');
+    }
+);
+
+$routes->group(
+    'api/vDtm/v2',
+    [
+        'namespace' => 'App\Controllers\Dtm\v2',
+        'filter'    => 'userDtm'
+    ],
+    function (\CodeIgniter\Router\RouteCollection $routes) {
+        //Payment
+        $routes->post('payments/list', 'PaymentController::index');
+        $routes->post('payments/show', 'PaymentController::show');
+        $routes->post('payments/create', 'PaymentController::create');
+        $routes->post('payments/update', 'PaymentController::update');
+        $routes->post('payments/delete', 'PaymentController::delete');
+        $routes->post('payments/createOrderCompensate', 'PaymentController::createOrderCompensate');
     }
 );
 

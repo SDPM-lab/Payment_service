@@ -12,11 +12,11 @@ use App\Services\User;
 class WalletController extends BaseController
 {
     use ResponseTrait;
-    
+
     private $u_key;
 
     public function __construct()
-    {   
+    {
         $this->u_key = User::getUserKey();
     }
 
@@ -30,7 +30,9 @@ class WalletController extends BaseController
     public function show()
     {
         $walletEntity = WalletBusinessLogic::getWallet($this->u_key);
-        if (is_null($walletEntity)) return $this->fail("無此使用者錢包資訊", 404);
+        if (is_null($walletEntity)) {
+            return $this->fail("無此使用者錢包資訊", 404);
+        }
 
         $data = [
             "u_key" => $walletEntity->u_key,
@@ -55,22 +57,26 @@ class WalletController extends BaseController
         $addAmount = $this->request->getPost("addAmount");
         $type = "store";
 
-        if(is_null($u_key) || is_null($addAmount)) return $this->fail("輸入資料錯誤",400);
+        if (is_null($u_key) || is_null($addAmount)) {
+            return $this->fail("輸入資料錯誤", 400);
+        }
 
         $walletEntity = WalletBusinessLogic::getWallet($u_key);
-        if(is_null($walletEntity)) return $this->fail("找不到此使用者錢包資訊",404);
+        if (is_null($walletEntity)) {
+            return $this->fail("找不到此使用者錢包資訊", 404);
+        }
 
         $balance = $walletEntity->balance;
 
         $walletModel = new WalletModel();
-        $result = $walletModel->addBalanceTranscation($u_key,$type,$balance,$addAmount);
+        $result = $walletModel->addBalanceTranscation($u_key, $type, $balance, $addAmount);
 
-        if($result){
+        if ($result) {
             return $this->respond([
                 "msg" => "OK"
             ]);
-        }else{
-            return $this->fail("儲值失敗",400);
+        } else {
+            return $this->fail("儲值失敗", 400);
         }
     }
 
@@ -86,10 +92,14 @@ class WalletController extends BaseController
         $addAmount = $this->request->getPost("addAmount");
         $type = "compensate";
 
-        if (is_null(($u_key)) || is_null(($addAmount))) return $this->fail("輸入資料錯誤", 400);
+        if (is_null(($u_key)) || is_null(($addAmount))) {
+            return $this->fail("輸入資料錯誤", 400);
+        }
 
         $walletEntity = WalletBusinessLogic::getWallet($u_key);
-        if (is_null($walletEntity)) return $this->fail("找不到此使用者錢包資訊", 404);
+        if (is_null($walletEntity)) {
+            return $this->fail("找不到此使用者錢包資訊", 404);
+        }
 
         $balance = $walletEntity->balance;
 
