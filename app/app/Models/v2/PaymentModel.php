@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models\v1;
+namespace App\Models\v2;
 
 use CodeIgniter\Model;
-
 use App\Entities\v1\PaymentEntity;
 
 class PaymentModel extends Model
@@ -48,11 +47,10 @@ class PaymentModel extends Model
      * @param integer $u_key
      * @param string $o_key
      * @param integer $total
-     * @param integer $nowAmount
      * @param string $type
      * @return bool
      */
-    public function createPaymentTranscation(int $u_key, string $o_key, int $total, int $nowAmount, string $type): bool
+    public function createPaymentTranscation(int $u_key, string $o_key, int $total, string $type)
     {
         $history = [
             "u_key" => $u_key,
@@ -82,17 +80,7 @@ class PaymentModel extends Model
             $this->db->table("payment")
                      ->insert($paymentData);
 
-            $wallet = [
-                "balance" => $nowAmount - $total,
-                "updated_at" => date("Y-m-d H:i:s")
-            ];
-
-            $this->db->table("wallet")
-                     ->where("u_key", $u_key)
-                     ->where("balance >=", $total)
-                     ->update($wallet);
-
-            if ($this->db->transStatus() === false || $this->db->affectedRows() == 0) {
+            if ($this->db->transStatus() === false || $this->db->affectedRows() === 0) {
                 $this->db->transRollback();
                 return false;
             } else {

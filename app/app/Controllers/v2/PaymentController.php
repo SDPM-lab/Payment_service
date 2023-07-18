@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Controllers\v1;
+namespace App\Controllers\v2;
 
 use CodeIgniter\API\ResponseTrait;
-
 use App\Controllers\v1\BaseController;
-use App\Models\v1\PaymentModel;
+use App\Models\v2\PaymentModel;
 use App\Entities\v1\PaymentEntity;
-
 use App\Models\v1\BusinessLogic\PaymentBusinessLogic;
-use App\Models\v1\BusinessLogic\WalletBusinessLogic;
 use App\Services\User;
 
 class PaymentController extends BaseController
@@ -119,7 +116,7 @@ class PaymentController extends BaseController
         $u_key = $this->u_key;
         $o_key = $this->request->getPost("o_key");
         $total = $this->request->getPost("total");
-        $type = "orderPayment";
+        $type  = "orderPayment";
 
         if (is_null($u_key) || is_null($o_key) || is_null($total)) {
             return $this->fail("傳入資料錯誤", 400);
@@ -132,13 +129,11 @@ class PaymentController extends BaseController
 
         $paymentModel = new PaymentModel();
 
-        $nowAmount = WalletBusinessLogic::getWallet($u_key)->balance;
+        $createResult = $paymentModel->createPaymentTranscation($u_key, $o_key, $total, $type);
 
-        if ($nowAmount < $total) {
-            return $this->fail("餘額不足", 400);
-        }
-
-        $createResult = $paymentModel->createPaymentTranscation($u_key, $o_key, $total, $nowAmount, $type);
+        return $this->respond([
+            "msg" => $createResult
+        ]);
 
         if ($createResult === false) {
             return $this->fail("新增付款失敗", 400);

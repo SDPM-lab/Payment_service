@@ -50,7 +50,7 @@ class WalletModel extends Model
      * @param integer $addAmount
      * @return boolean
      */
-    public function addBalanceTranscation(int $u_key, string $type, int $balance, int $addAmount):bool
+    public function addBalanceTranscation(int $u_key, string $type, int $balance, int $addAmount): bool
     {
         try {
             $this->db->transStart();
@@ -71,7 +71,7 @@ class WalletModel extends Model
             ];
 
             $this->db->table("wallet")
-                     ->where("u_key",$u_key)
+                     ->where("u_key", $u_key)
                      ->update($wallet);
 
             $result = $this->db->transComplete();

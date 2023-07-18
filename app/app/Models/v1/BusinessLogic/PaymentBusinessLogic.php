@@ -7,7 +7,6 @@ use App\Entities\v1\PaymentEntity;
 
 class PaymentBusinessLogic
 {
-
     /**
      * 取得單筆訂單付款資訊
      *
@@ -15,11 +14,11 @@ class PaymentBusinessLogic
      * @param integer $u_key
      * @return PaymentEntity|null
      */
-    static function getPayment(int $p_key,int $u_key): ?PaymentEntity
+    public static function getPayment(int $p_key, int $u_key): ?PaymentEntity
     {
         $paymentModel = new PaymentModel();
 
-        $paymentEntity = $paymentModel->where("u_key",$u_key)
+        $paymentEntity = $paymentModel->where("u_key", $u_key)
                                       ->find($p_key);
 
         return $paymentEntity;
@@ -32,7 +31,7 @@ class PaymentBusinessLogic
      * @param integer $u_key
      * @return PaymentEntity|null
      */
-    static function getPaymentByOrderKey(string $o_key, int $u_key): ?PaymentEntity
+    public static function getPaymentByOrderKey(string $o_key, int $u_key): ?PaymentEntity
     {
         $paymentModel = new PaymentModel();
 
