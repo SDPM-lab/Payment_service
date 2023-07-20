@@ -74,10 +74,10 @@ $routes->group(
     function (\CodeIgniter\Router\RouteCollection $routes) {
         //Payment
         $routes->get('payments', 'PaymentController::index');
-        $routes->get('payments/(:num)', 'PaymentController::show/$1');
+        $routes->get('payments/(:segment)', 'PaymentController::show/$1');
         $routes->post('payments', 'PaymentController::create');
         $routes->put('payments', 'PaymentController::update');
-        $routes->delete('payments/(:num)', 'PaymentController::delete/$1');
+        $routes->delete('payments/(:segment)', 'PaymentController::delete/$1');
     }
 );
 

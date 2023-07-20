@@ -189,20 +189,20 @@ class PaymentController extends BaseController
      * @param [type] $paymentKey
      * @return void
      */
-    public function delete($paymentKey = null)
+    public function delete($orderKey = null)
     {
-        if (is_null($paymentKey)) {
-            return $this->fail("請輸入訂單付款 key", 404);
+        if (is_null($orderKey)) {
+            return $this->fail("請輸入訂單 key", 404);
         }
 
-        $paymentEntity = PaymentBusinessLogic::getPayment($paymentKey, $this->u_key);
+        $paymentEntity = PaymentBusinessLogic::getPaymentByOrderKey($orderKey, $this->u_key);
         if (is_null($paymentEntity)) {
             return $this->fail("無此訂單付款資訊", 404);
         }
 
         $paymentModel = new PaymentModel();
 
-        $result = $paymentModel->deletePaymentTranscation($paymentKey, $paymentEntity->h_key);
+        $result = $paymentModel->deletePaymentTransaction($orderKey, $paymentEntity->h_key);
 
         if ($result) {
             return $this->respond([

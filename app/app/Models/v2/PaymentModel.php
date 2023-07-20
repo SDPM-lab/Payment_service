@@ -96,11 +96,11 @@ class PaymentModel extends Model
     /**
      * 刪除訂單付款與流水帳 transcation
      *
-     * @param integer $p_key
+     * @param string $o_key
      * @param integer $h_key
      * @return boolean
      */
-    public function deletePaymentTranscation(int $p_key, int $h_key): bool
+    public function deletePaymentTransaction(string $o_key, int $h_key): bool
     {
         try {
             $this->db->transStart();
@@ -114,7 +114,7 @@ class PaymentModel extends Model
                      ->update($time);
 
             $this->db->table("payment")
-                     ->where("p_key", $p_key)
+                     ->where("o_key", $o_key)
                      ->update($time);
 
             $result = $this->db->transComplete();
