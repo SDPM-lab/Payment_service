@@ -90,12 +90,12 @@ class PaymentController extends BaseController
     {
         $data = $this->request->getJSON(true);
 
-        $paymentKey = $data["p_key"] ?? null;
-        if ($paymentKey == null) {
+        $orderKey = $data["o_key"] ?? null;
+        if ($orderKey == null) {
             return $this->fail("無傳入訂單 key", 404);
         }
 
-        $paymentEntity = PaymentBusinessLogic::getPayment($paymentKey, $this->u_key);
+        $paymentEntity = PaymentBusinessLogic::getPaymentByOrderKey($orderKey, $this->u_key);
         if (is_null($paymentEntity)) {
             return $this->fail("無此訂單付款資訊", 404);
         }
@@ -165,23 +165,23 @@ class PaymentController extends BaseController
         $data = $this->request->getJSON(true);
 
         $total = $data["total"] ?? null;
-        $p_key = $data["p_key"] ?? null;
+        $o_key = $data["o_key"] ?? null;
 
-        if (is_null($total) || is_null($p_key)) {
+        if (is_null($total) || is_null($o_key)) {
             return $this->fail("傳入資料錯誤", 400);
         }
 
         $paymentModel = new PaymentModel();
         $paymentEntity = new PaymentEntity();
 
-        $paymentEntity = PaymentBusinessLogic::getPayment($p_key, $this->u_key);
+        $paymentEntity = PaymentBusinessLogic::getPaymentByOrderKey($o_key, $this->u_key);
         if (is_null($paymentEntity)) {
             return $this->fail("無此訂單付款資訊", 404);
         }
 
         $paymentEntity->total = $total;
 
-        $result = $paymentModel->update($p_key, $paymentEntity->toRawArray(true));
+        $result = $paymentModel->update($paymentEntity->p_key, $paymentEntity->toRawArray(true));
 
         if ($result) {
             return $this->respond([
@@ -203,19 +203,19 @@ class PaymentController extends BaseController
     {
         $data = $this->request->getJSON(true);
 
-        $paymentKey = $data["p_key"] ?? null;
-        if (is_null($paymentKey)) {
+        $orderKey = $data["o_key"] ?? null;
+        if (is_null($orderKey)) {
             return $this->fail("請輸入訂單付款 key", 404);
         }
 
-        $paymentEntity = PaymentBusinessLogic::getPayment($paymentKey, $this->u_key);
+        $paymentEntity = PaymentBusinessLogic::getPaymentByOrderKey($orderKey, $this->u_key);
         if (is_null($paymentEntity)) {
             return $this->fail("無此訂單付款資訊", 404);
         }
 
         $paymentModel = new PaymentModel();
 
-        $result = $paymentModel->deletePaymentTranscation($paymentKey, $paymentEntity->h_key);
+        $result = $paymentModel->deletePaymentTransaction($orderKey, $paymentEntity->h_key);
 
         if ($result) {
             return $this->respond([
@@ -227,6 +227,7 @@ class PaymentController extends BaseController
     }
 
     /**
+     * {@deprecated v0.2}
      * [POST] /api/vDtm/payments/createOrderCompensate
      * 訂單新增補償
      * 刪除訂單與使用者錢包補償
